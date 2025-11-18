@@ -31,7 +31,7 @@ st.markdown("""
     .main-header {
         text-align: center;
         padding: 2rem;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #2c3e50 0%, #4ca1af 100%);
         border-radius: 15px;
         margin-bottom: 2rem;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -52,14 +52,14 @@ st.markdown("""
         gap: 8px;
     }
     .stTabs [data-baseweb="tab"] {
-        background-color: #1a202c;
+        background-color: #334155;
         color: #e2e8f0;
         border-radius: 8px 8px 0 0;
         padding: 10px 20px;
         font-weight: 600;
     }
     .stTabs [aria-selected="true"] {
-        background-color: #667eea;
+        background-color: #475569;
         color: white;
     }
     
@@ -224,14 +224,20 @@ with tabs[1]:
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
         st.markdown(f"""
-            <div style='background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
-                        padding: 1.5rem; border-radius: 15px; text-align: center; 
-                        color: white; margin-bottom: 2rem;'>
-                <h2 style='margin: 0;'>🏆 Best Model</h2>
-                <h3 style='margin: 0.5rem 0;'>{best_model_name}</h3>
-                <p style='font-size: 1.5rem; margin: 0;'>Accuracy: {best_accuracy:.2%}</p>
-            </div>
-        """, unsafe_allow_html=True)
+    <div style='
+        background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        padding: 1.5rem; 
+        border-radius: 15px; 
+        text-align: center; 
+        color: white; 
+        margin-bottom: 2rem;
+    '>
+        <h2 style='margin: 0;'>🏆 Best Model</h2>
+        <h3 style='margin: 0.5rem 0;'>{best_model_name}</h3>
+        <p style='font-size: 1.5rem; margin: 0;'>Accuracy: {best_accuracy:.2%}</p>
+    </div>
+""", unsafe_allow_html=True)
+
     
     # Metrics Table
     st.markdown("#### 📋 Detailed Metrics Table")
@@ -240,7 +246,8 @@ with tabs[1]:
         'Precision': '{:.4f}',
         'Recall': '{:.4f}',
         'F1-Score': '{:.4f}'
-    }).highlight_max(axis=0, color="lightgreen")
+    }).highlight_max(axis=0, color="#20C997")
+
     st.dataframe(styled_results, use_container_width=True, height=250)
     
     st.markdown("---")
