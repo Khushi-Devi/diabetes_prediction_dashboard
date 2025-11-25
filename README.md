@@ -42,7 +42,7 @@ Clean, modern UI with color-coded risk results
 
 Follow these steps to set up and run the project locally:
 
-1. **Clone the repository**
+- **Clone the repository**
    ```bash
    git clone https://github.com/Khushi-Devi/diabetes_prediction_dashboard.git
    cd diabetes_prediction_dashboard
@@ -56,6 +56,6 @@ source venv/bin/activate   # On Linux/Mac
 
 venv\Scripts\activate      # On Windows
 
-3.pip install -r requirements.txt
+-pip install -r requirements.txt
 
-4.streamlit run app.py (run the dashboard)
+-streamlit run app.py (run the dashboard)
