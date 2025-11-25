@@ -126,9 +126,15 @@ def load_model_results():
 def load_best_model():
     return joblib.load("best_model.pkl")
 
+# ✅ NEW: Load scaler
+@st.cache_resource
+def load_scaler():
+    return joblib.load("scaler.pkl")
+
 df = load_data()
 results = load_model_results()
 best_model = load_best_model()
+scaler = load_scaler()  # NEW
 
 # --------------------------
 # Tabs
@@ -142,7 +148,6 @@ with tabs[0]:
     st.markdown("### 📊 Data Overview & Insights")
     st.markdown("Explore the diabetes dataset and visualize key health parameters")
     
-    # Dataset info cards
     col1, col2, col3, col4 = st.columns(4)
     with col1:
         st.metric("Total Samples", len(df), border=True)
@@ -157,7 +162,6 @@ with tabs[0]:
     
     st.markdown("---")
     
-    # Dataset Preview with expander
     with st.expander("📋 Dataset Preview", expanded=False):
         st.dataframe(df.head(10), use_container_width=True)
     
@@ -166,7 +170,6 @@ with tabs[0]:
     
     st.markdown("---")
     
-    # Visualizations in columns
     col1, col2 = st.columns(2)
     
     with col1:
@@ -197,7 +200,6 @@ with tabs[0]:
         counts = df['Outcome'].value_counts()
         bars = ax.bar(['Non-Diabetic', 'Diabetic'], counts.values, color=colors, edgecolor='black', linewidth=1.5)
         
-        # Add value labels on bars
         for bar in bars:
             height = bar.get_height()
             ax.text(bar.get_x() + bar.get_width()/2., height,
@@ -217,7 +219,6 @@ with tabs[1]:
     st.markdown("### 🤖 Model Performance Comparison")
     st.markdown("Compare accuracy and metrics across all trained machine learning models")
     
-    # Best model highlight
     best_model_name = results.loc[results['Accuracy'].idxmax(), 'Model']
     best_accuracy = results['Accuracy'].max()
     
@@ -239,7 +240,6 @@ with tabs[1]:
 """, unsafe_allow_html=True)
 
     
-    # Metrics Table
     st.markdown("#### 📋 Detailed Metrics Table")
     styled_results = results.style.format({
         'Accuracy': '{:.4f}',
@@ -252,7 +252,6 @@ with tabs[1]:
     
     st.markdown("---")
     
-    # Visualizations
     col1, col2 = st.columns(2)
     
     with col1:
@@ -260,7 +259,6 @@ with tabs[1]:
         fig, ax = plt.subplots(figsize=(8, 5))
         bars = ax.barh(results['Model'], results['Accuracy'], color='#667eea', edgecolor='black')
         
-        # Highlight best model
         max_idx = results['Accuracy'].idxmax()
         bars[max_idx].set_color('#f093fb')
         
@@ -298,7 +296,6 @@ with tabs[2]:
     
     st.markdown("---")
     
-    # Input form with better organization
     st.markdown("#### 📝 Patient Information")
     
     col1, col2, col3 = st.columns(3)
@@ -338,7 +335,6 @@ with tabs[2]:
     
     st.markdown("---")
     
-    # Prediction button
     col1, col2, col3 = st.columns([1, 1, 1])
     with col2:
         predict_button = st.button("🔍 Predict Diabetes Risk", type="primary", use_container_width=True)
@@ -349,10 +345,14 @@ with tabs[2]:
                 Pregnancies, Glucose, BloodPressure, SkinThickness,
                 Insulin, BMI, DiabetesPedigreeFunction, Age
             ]]
-            prediction = best_model.predict(user_data)[0]
-            probability = best_model.predict_proba(user_data)[0]
+
+            # ✅ NEW: Scale data before prediction
+            scaled_data = scaler.transform(user_data)
+
+            # Predict using scaled data
+            prediction = best_model.predict(scaled_data)[0]
+            probability = best_model.predict_proba(scaled_data)[0]
             
-            # Display results
             st.markdown("---")
             st.markdown("### 📊 Prediction Results")
             
@@ -397,7 +397,6 @@ with tabs[2]:
                         </div>
                     """, unsafe_allow_html=True)
                 
-                # Probability breakdown
                 st.markdown("---")
                 st.markdown("#### 📊 Detailed Probability Breakdown")
                 prob_col1, prob_col2 = st.columns(2)
